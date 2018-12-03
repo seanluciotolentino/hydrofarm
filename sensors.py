@@ -2,10 +2,9 @@
 """
 add me to the crontab with
 
-*/5 * * * * /usr/bin/python /home/pi/hydrofarm/sensors.py > data/sensor_data.csv
+*/5 * * * * /usr/bin/python /home/pi/hydrofarm/sensors.py > /home/pi/hydrofarm/data/sensor_data.csv
 
 """
-
 
 import PCF8591 as ADC
 import math
