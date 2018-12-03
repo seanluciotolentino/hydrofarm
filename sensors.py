@@ -1,7 +1,16 @@
 #!/usr/bin/env python
+"""
+add me to the crontab with
+
+*/5 * * * * /usr/bin/python /home/pi/hydrofarm/sensors.py > data/sensor_data.csv
+
+"""
+
+
 import PCF8591 as ADC
 import math
 import sys
+import time
 
 TEMP_PIN = 0
 LIGHT_PIN = 2
