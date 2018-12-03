@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import PCF8591 as ADC
-import time
 import math
 import sys
 
@@ -18,23 +17,20 @@ def get_temperature():
 	return temp - 273.15
 
 
-def loop():
-	while True:
-		# collect the data
-		temp = get_temperature()  # there's some math with this
-		light = ADC.read(LIGHT_PIN)
-		moisture = ADC.read(MOISTURE_PIN)
-		timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+def run():
+	# collect the data
+	temp = get_temperature()  # there's some math with this
+	light = ADC.read(LIGHT_PIN)
+	moisture = ADC.read(MOISTURE_PIN)
+	timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
-		# write the data
-		print ','.join([str(v) for v in [timestamp,temp, light, moisture]])
-		sys.stdout.flush()
-
-		time.sleep(SLEEP_LENGTH)
+	# write the data
+	print ','.join([str(v) for v in [timestamp,temp, light, moisture]])
+	sys.stdout.flush()
 
 if __name__ == '__main__':
 	try:
 		ADC.setup(0x48)  # I'm not sure exactly what this does but seems necessary
-		loop()
+		run()
 	except KeyboardInterrupt: 
 		pass
