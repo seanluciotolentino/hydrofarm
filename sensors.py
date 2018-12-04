@@ -34,12 +34,12 @@ def run():
 	timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
 	# write the data
-	print ','.join([str(v) for v in [timestamp,temp, light, moisture]])
+	line = ','.join([str(v) for v in [timestamp,temp, light, moisture]])
+	print line
 	sys.stdout.flush()
 
 	# write data to server
-	line = '&'.join(['%s=%s'%(v,eval(v))for v in ['timestamp','temp', 'light', 'moisture']])
-	requests.get('http://192.168.1.190:5000/measure/?'+line)
+	requests.get('http://192.168.1.190:5000/measure/'+line)
 
 if __name__ == '__main__':
 	try:
