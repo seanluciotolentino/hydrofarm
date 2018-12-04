@@ -10,6 +10,7 @@ import PCF8591 as ADC
 import math
 import sys
 import time
+import requests
 
 TEMP_PIN = 0
 LIGHT_PIN = 2
@@ -35,6 +36,10 @@ def run():
 	# write the data
 	print ','.join([str(v) for v in [timestamp,temp, light, moisture]])
 	sys.stdout.flush()
+
+	# write data to server
+	line = '&'.join(['%s=%s'%(v,eval(v))for v in ['timestamp','temp', 'light', 'moisture']])
+	requests.get('http://192.168.1.190:5000/measure/?'+line)
 
 if __name__ == '__main__':
 	try:
