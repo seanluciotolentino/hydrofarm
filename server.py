@@ -14,7 +14,7 @@ def index():
 def measure(line):
 	print('measurement=',line)
 	try:
-		f = open('data/sensor_server.csv', 'a')
+		f = open('data/sensor_data.csv', 'a')
 		f.write(line.replace('"','')+'\n')
 		f.close()
 		return 'success', 200
