@@ -24,6 +24,13 @@ def measure(line):
 		
 @app.route('/record/', methods=['POST'])
 def record():
+	"""
+	# example usage:
+	
+	import requests
+	fname = 'test.jpg'
+	r = requests.post('http://192.168.1.190:5000/record/', files={'file':open(fname, 'rb')})
+	"""
 	print('record called')
 	# check if the post request has the file part
 	try:
@@ -31,7 +38,7 @@ def record():
 		    print('no file supplied')
 		    return 'fail', 400
 	    file = request.files['file']
-	    if file and file.filename.endswith('.png'):
+	    if file and file.filename.endswith('.jpg'):
 		    filename = secure_filename(file.filename)
 		    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 		    return 'sucess', 200
