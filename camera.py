@@ -68,15 +68,15 @@ def reset():
 	x = y = 0
 	cam.ready()
 
-def lights(onoff, camgrow):
+def lights(camgrow, onoff):
 	cmd = '%s_lights_%s'%(camgrow, onoff)
 	requests.get('https://maker.ifttt.com/trigger/%s/with/key/%s'%(cmd,token))
 
 def capture():
 	# turn cam lights on and grow lights off
-	lights('on', 'cam')
-	lights('off', 'grow')
-	time.sleep(2)  # webhooks need a second to process the request
+	lights('cam', 'on')
+	lights('grow', 'off')
+	time.sleep(5)  # webhooks need a second to process the request
 
 	# iterate over positions 
 	timestamp = time.strftime('%Y-%m-%d_%H:%M:%S')
@@ -86,10 +86,10 @@ def capture():
 		reset()
 
 	# turn grow lights on and cam lights off
-	hour = time.strftime('%H')
+	hour = int(time.strftime('%H'))
 	if hour>=23 or hour<=6:
-		lights('on', 'grow')
-	lights('off', 'cam')
+		lights('grow', 'on')
+	lights('cam', 'off')
 
 if __name__ == '__main__':
 	try:
