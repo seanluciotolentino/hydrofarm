@@ -69,7 +69,7 @@ def reset():
 	cam.ready()
 
 def lights(onoff, camgrow):
-	cmd = '%s_lights_%s'
+	cmd = '%s_lights_%s'%(camgrow, onoff)
 	requests.get('https://maker.ifttt.com/trigger/%s/with/key/%s'%(cmd,token))
 
 def capture():
