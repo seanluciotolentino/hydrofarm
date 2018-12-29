@@ -87,7 +87,7 @@ def capture():
 
 	# turn grow lights on and cam lights off
 	hour = time.strftime('%H')
-	if hour>=23 or <=6:
+	if hour>=23 or hour<=6:
 		lights('on', 'grow')
 	lights('off', 'cam')
 
