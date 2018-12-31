@@ -58,7 +58,6 @@ def record():
 		if file and file.filename.endswith('.jpg'):
 			filename = secure_filename(file.filename)
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-			return 'sucess', 200
 
 			# if it's the q5 capture - set up the folders for the dashboard
 			if 'q5' in file.filename:
@@ -80,6 +79,8 @@ def record():
 				# make a file for the time labels too
 				times = [quad_files[recent].split('_')[-1][:-4] for recent in range(-1, -6, -1)]
 				json.dump(times, open('../dashboard/static/recent/labels.json', 'w'))
+
+			return 'sucess', 200
 
 	except Exception as e:
 		print("Server can't handle those parameters:", e)
