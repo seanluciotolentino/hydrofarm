@@ -49,13 +49,13 @@ def snap(filename):
 
 def move(leftright, updown):
 	if updown<0:
-		cam.turn_down(-amt)
+		cam.turn_down(-updown)
 	else:
-		cam.turn_up(amt)
+		cam.turn_up(updown)
 	if leftright<0:
-		cam.turn_left(-amt)
+		cam.turn_left(-leftright)
 	else:
-		cam.turn_right(amt)
+		cam.turn_right(leftright)
 	time.sleep(1)
 
 def reset():
