@@ -29,12 +29,12 @@ def create_gif(filenames, output_name):
 	helper function to make a gif out of a bunch of filenames
 	"""
 	print('making gif', output_name)
-    images = []
-    for filename in sorted(filenames)[-24:]:
-        images.append(imageio.imread('%s%s'%(UPLOAD_FOLDER, filename)))
-    output_file = './dashboard/static/timelapse/%s.gif'%output_name
-    imageio.mimsave(output_file, images, duration=0.5)
-    return images
+	images = []
+	for filename in sorted(filenames)[-24:]:
+		images.append(imageio.imread('%s%s'%(UPLOAD_FOLDER, filename)))
+	output_file = './dashboard/static/timelapse/%s.gif'%output_name
+	imageio.mimsave(output_file, images, duration=0.5)
+	return images
 
 
 @app.route('/record/', methods=['POST'])
@@ -86,4 +86,4 @@ def record():
 		return 'fail', 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+	app.run(host='0.0.0.0')
