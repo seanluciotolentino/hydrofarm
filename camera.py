@@ -3,7 +3,7 @@ from picar import back_wheels, front_wheels
 import picar
 import time
 import requests
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 from StringIO import StringIO
 import os
 
@@ -36,7 +36,8 @@ def snap(filename):
 	# put timestamp on image
 	d = ImageDraw.Draw(i)
 	timestamp = ' '.join(filename.split('_')[1:])[:-4]
-	d.text((10,40),timestamp,(255,255,255))
+	font = ImageFont.truetype("Caladea-Bold.ttf", 35)
+	d.text((10,10), timestamp, font=font, fill=(96,244,66))
 
 	i.save(filename)  # save it 
 
