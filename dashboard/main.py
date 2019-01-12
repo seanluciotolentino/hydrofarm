@@ -54,11 +54,17 @@ def update_plot(attrname, old, new):
     for measure in MEASURES:
         sources[measure].data.update(srcs[measure].data)
 
-def timelapse(q):
+def daily(q):
     """
     When new images are added to the server, have these gifs created
     """
     return Div(text='<IMG SRC="dashboard/static/timelapse/q%s.gif" height="225" width="300">'%q)
+
+def weekly(q):
+    """
+    When new images are added to the server, have these gifs created
+    """
+    return Div(text='<IMG SRC="dashboard/static/timelapse/weekly%s.gif" height="225" width="300">'%q)
 
 def recent(q):
     """
@@ -89,9 +95,13 @@ plots_row = row(plots['temperature'], plots['light'], plots['moisture'])
 sensors_arrangement = column(sensor_title, widgets_row, plots_row)
 
 # 2. add timelapse gifs
-timelapse_title = Div(text="<h1>Last 24 hours</h1>")
-timelapse_row = row([timelapse(q) for q in range(1,5)])
-timelapse_arrangement = column(timelapse_title, timelapse_row)
+daily_title = Div(text="<h1>Last 24 hours</h1>")
+daily_row = row([daily(q) for q in range(1,5)])
+daily_arrangement = column(daily_title, daily_row)
+
+weekly_title = Div(text="<h1>Last 24 hours</h1>")
+weekly_row = row([weekly(q) for q in range(1,5)])
+weekly_arrangement = column(weekly_title, weekly_row)
 
 # 3. add most recent pictures
 recent_title = Div(text="<h1>Most recent</h1>")
