@@ -4,6 +4,7 @@ import os
 from flask import Flask, render_template
 import json
 import imageio
+import time 
 
 UPLOAD_FOLDER = '/home/lucio/Desktop/hydroimages/'
 app = Flask(__name__)
@@ -25,16 +26,16 @@ def measure(line):
 		print("Server can't handle those parameters:", e)
 		return 'fail', 400
 		
-def create_gif(filenames, output_name):
+def create_gif(filenames, output_name, duration=0.5):
 	"""
 	helper function to make a gif out of a bunch of filenames
 	"""
 	print('making gif', output_name)
 	images = []
-	for filename in sorted(filenames)[-24:]:
+	for filename in filenames:
 		images.append(imageio.imread('%s%s'%(UPLOAD_FOLDER, filename)))
 	output_file = './dashboard/static/timelapse/%s.gif'%output_name
-	imageio.mimsave(output_file, images, duration=0.5)
+	imageio.mimsave(output_file, images, duration=duration)
 	return images
 
 
@@ -62,13 +63,20 @@ def record():
 
 			# if it's the q5 capture - set up the folders for the dashboard
 			if 'q5' in file.filename:
+			    last_week = time.strftime('%Y-%m-%d', time.gmtime(time.time() - (60*60*24*7)))
 				# make a gif of every quadrant
 				for q in range(1,6):
 					# daily gif
 					quad = 'q'+str(q)
-					filenames = [f for f in os.listdir(UPLOAD_FOLDER) if quad in f]
-					images = create_gif(filenames, quad)
+					filenames = sorted([f for f in os.listdir(UPLOAD_FOLDER) if quad in f])
+					images = create_gif(filenames[-24:], quad)
 					print(quad, len(images))
+					
+                    # last week
+	                quad = 'q'+str(q)
+	                filenames = sorted([f for f in os.listdir(UPLOAD_FOLDER) if quad in f and f.split('_')[1]>=last_week])
+	                images = create_gif(filenames[::6], 'weekly%s'%q, duration=0.1)
+	                print(quad, len(images))
 
 				# clear the recents and put the new ones there
 				os.popen('rm ./dashboard/static/recent/*').read()  # clear the recent folder 

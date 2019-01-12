@@ -101,7 +101,7 @@ daily_title = Div(text="<h1>Last 24 hours</h1>")
 daily_row = row([daily(q) for q in range(1,6)])
 daily_arrangement = column(daily_title, daily_row)
 
-weekly_title = Div(text="<h1>Last 24 hours</h1>")
+weekly_title = Div(text="<h1>Last 7 days</h1>")
 weekly_row = row([weekly(q) for q in range(1,6)])
 weekly_arrangement = column(weekly_title, weekly_row)
 
@@ -111,7 +111,7 @@ time_labels = json.load(open('dashboard/static/recent/labels.json', 'r'))
 recent_labels = row([Div(text='<h4>%s</h4>'%tl, width=300) for tl in time_labels])
 recent_arrangement = column(recent_title, recent_labels, column([recent(q) for q in range(1,6)]))
 
-column = column(sensors_arrangement, timelapse_arrangement, recent_arrangement)
+column = column(sensors_arrangement, daily_arrangement, weekly_arrangement, recent_arrangement)
 
 
 curdoc().add_root(column)
