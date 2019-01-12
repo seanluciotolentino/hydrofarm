@@ -58,13 +58,15 @@ def timelapse(q):
     """
     When new images are added to the server, have these gifs created
     """
-    return Div(text='<IMG SRC="dashboard/static/timelapse/q%s.gif" height="225" width="300">'%q)
+    d = DAYS_AGO(0)  # add a timestamp so images don't get cached
+    return Div(text='<IMG SRC="dashboard/static/timelapse/q%s.gif?dummy=%s" height="225" width="300">'%(q,d))
 
 def recent(q):
     """
     When new images are added to the server, this folder is updated
     """
-    return row([Div(text='<IMG SRC="dashboard/static/recent/q%s_%s.jpg" height="187.5" width="250">'%(q, r)) for r in range(1,6)])
+    d = DAYS_AGO(0)  # add a timestamp so images don't get cached
+    return row([Div(text='<IMG SRC="dashboard/static/recent/q%s_%s.jpg?dummy=%s" height="187.5" width="250">'%(q, r, d)) for r in range(1,6)])
 
 # load data
 df = pd.read_csv(join(dirname(__file__), '../data/sensor_data.csv'), names=['ts']+MEASURES)
@@ -73,31 +75,31 @@ df = pd.read_csv(join(dirname(__file__), '../data/sensor_data.csv'), names=['ts'
 sensor_title = Div(text="<h1>Sensor Data</h1>")
 agg = 'raw'
 agg_select = Select(value=agg, title='Aggregation level', options=list(AGGS.keys()), width=400)
-time = 'last 4 days'
-time_select = Select(value=time, title='Time frame', options=list(TIME.keys()), width=400)
+timeframe = 'last 4 days'
+timeframe_select = Select(value=timeframe, title='Time frame', options=list(TIME.keys()), width=400)
 agg_select.on_change('value', update_plot)
-time_select.on_change('value', update_plot)
+timeframe_select.on_change('value', update_plot)
 update_div = Div(text="<h4>Last updated</h4> "+str(df.ts.iloc[-1]), width=390)
 
 # create plots
-sources = get_dataset(df, agg, time)
+sources = get_dataset(df, agg, timeframe)
 plots = make_plots(sources)
 
 # arrange them
-widgets_row = row(update_div, agg_select, time_select)
+widgets_row = row(update_div, agg_select, timeframe_select)
 plots_row = row(plots['temperature'], plots['light'], plots['moisture'])
 sensors_arrangement = column(sensor_title, widgets_row, plots_row)
 
 # 2. add timelapse gifs
 timelapse_title = Div(text="<h1>Last 24 hours</h1>")
-timelapse_row = row([timelapse(q) for q in range(1,5)])
+timelapse_row = row([timelapse(q) for q in range(1,6)])
 timelapse_arrangement = column(timelapse_title, timelapse_row)
 
 # 3. add most recent pictures
 recent_title = Div(text="<h1>Most recent</h1>")
 time_labels = json.load(open('dashboard/static/recent/labels.json', 'r'))
 recent_labels = row([Div(text='<h4>%s</h4>'%tl, width=300) for tl in time_labels])
-recent_arrangement = column(recent_title, recent_labels, column([recent(q) for q in range(1,5)]))
+recent_arrangement = column(recent_title, recent_labels, column([recent(q) for q in range(1,6)]))
 
 column = column(sensors_arrangement, timelapse_arrangement, recent_arrangement)
 

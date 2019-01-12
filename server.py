@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 import os
 from flask import Flask, render_template
 import json
+import imageio
 
 UPLOAD_FOLDER = '/home/lucio/Desktop/hydroimages/'
 app = Flask(__name__)
@@ -74,11 +75,12 @@ def record():
 				some_files = [sorted([file for file in all_files if 'q'+str(quad) in file]) for quad in range(1,6)]
 				for q, quad_files in enumerate(some_files):
 					for recent in range(-1, -6, -1):
-						os.popen('cp %s%s ../dashboard/static/recent/q%s_%s.jpg'%(UPLOAD_FOLDER, quad_files[recent], q+1, recent*-1)).read()
+						os.popen('cp %s%s ./dashboard/static/recent/q%s_%s.jpg'%(UPLOAD_FOLDER, quad_files[recent], q+1, recent*-1)).read()
 
 				# make a file for the time labels too
 				times = [quad_files[recent].split('_')[-1][:-4] for recent in range(-1, -6, -1)]
-				json.dump(times, open('../dashboard/static/recent/labels.json', 'w'))
+				times = [t[0:2]+':'+t[2:4]+':'+t[4:6] for t in times]
+				json.dump(times, open('./dashboard/static/recent/labels.json', 'w'))
 
 			return 'sucess', 200
 
