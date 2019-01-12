@@ -63,33 +63,33 @@ def record():
 
 			# if it's the q5 capture - set up the folders for the dashboard
 			if 'q5' in file.filename:
-                last_week = time.strftime('%Y-%m-%d', time.gmtime(time.time() - (60*60*24*7)))
-                # make a gif of every quadrant
-                for q in range(1,6):
-	                # daily gif
-	                quad = 'q'+str(q)
-	                filenames = sorted([f for f in os.listdir(UPLOAD_FOLDER) if quad in f])
-	                images = create_gif(filenames[-24:], quad)
-	                print(quad, len(images))
-	
-                    # last week
-                    quad = 'q'+str(q)
-                    filenames = sorted([f for f in os.listdir(UPLOAD_FOLDER) if quad in f and f.split('_')[1]>=last_week])
-                    images = create_gif(filenames[::6], 'weekly%s'%q, duration=0.1)
-                    print(quad, len(images))
+				last_week = time.strftime('%Y-%m-%d', time.gmtime(time.time() - (60*60*24*7)))
+				# make a gif of every quadrant
+				for q in range(1,6):
+					# daily gif
+					quad = 'q'+str(q)
+					filenames = sorted([f for f in os.listdir(UPLOAD_FOLDER) if quad in f])
+					images = create_gif(filenames[-24:], quad)
+					print(quad, len(images))
 
-				    # clear the recents and put the new ones there
-				    os.popen('rm ./dashboard/static/recent/*').read()  # clear the recent folder 
-				    all_files = os.listdir(UPLOAD_FOLDER)
-				    some_files = [sorted([file for file in all_files if 'q'+str(quad) in file]) for quad in range(1,6)]
-				    for q, quad_files in enumerate(some_files):
-					    for recent in range(-1, -6, -1):
-						    os.popen('cp %s%s ./dashboard/static/recent/q%s_%s.jpg'%(UPLOAD_FOLDER, quad_files[recent], q+1, recent*-1)).read()
+					# last week
+					quad = 'q'+str(q)
+					filenames = sorted([f for f in os.listdir(UPLOAD_FOLDER) if quad in f and f.split('_')[1]>=last_week])
+					images = create_gif(filenames[::6], 'weekly%s'%q, duration=0.1)
+					print(quad, len(images))
 
-				    # make a file for the time labels too
-				    times = [quad_files[recent].split('_')[-1][:-4] for recent in range(-1, -6, -1)]
-				    times = [t[0:2]+':'+t[2:4]+':'+t[4:6] for t in times]
-				    json.dump(times, open('./dashboard/static/recent/labels.json', 'w'))
+					# clear the recents and put the new ones there
+					os.popen('rm ./dashboard/static/recent/*').read()  # clear the recent folder 
+					all_files = os.listdir(UPLOAD_FOLDER)
+					some_files = [sorted([file for file in all_files if 'q'+str(quad) in file]) for quad in range(1,6)]
+					for q, quad_files in enumerate(some_files):
+						for recent in range(-1, -6, -1):
+							os.popen('cp %s%s ./dashboard/static/recent/q%s_%s.jpg'%(UPLOAD_FOLDER, quad_files[recent], q+1, recent*-1)).read()
+
+					# make a file for the time labels too
+					times = [quad_files[recent].split('_')[-1][:-4] for recent in range(-1, -6, -1)]
+					times = [t[0:2]+':'+t[2:4]+':'+t[4:6] for t in times]
+					json.dump(times, open('./dashboard/static/recent/labels.json', 'w'))
 
 			# make weekly gif but only for 7am
 			hour = int(file.filename.split('_')[-1].split('/')[0])
