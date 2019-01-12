@@ -64,6 +64,7 @@ def record():
 			if 'q5' in file.filename:
 				# make a gif of every quadrant
 				for q in range(1,6):
+					# daily gif
 					quad = 'q'+str(q)
 					filenames = [f for f in os.listdir(UPLOAD_FOLDER) if quad in f]
 					images = create_gif(filenames, quad)
@@ -81,6 +82,15 @@ def record():
 				times = [quad_files[recent].split('_')[-1][:-4] for recent in range(-1, -6, -1)]
 				times = [t[0:2]+':'+t[2:4]+':'+t[4:6] for t in times]
 				json.dump(times, open('./dashboard/static/recent/labels.json', 'w'))
+
+			# make weekly gif but only for 7am
+			hour = int(file.filename.split('_')[-1].split('/')[0])
+			if 'q5' in file.filename and hour==7:
+				for q in range(1,6):
+					quad = 'q'+str(q)
+					filenames = [f for f in os.listdir(UPLOAD_FOLDER) if quad in f]
+					images = create_gif(filenames, f'weekly{q}')
+					print(quad, len(images))
 
 			return 'sucess', 200
 

@@ -3,7 +3,7 @@ from picar import back_wheels, front_wheels
 import picar
 import time
 import requests
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 from StringIO import StringIO
 import os
 
@@ -20,10 +20,10 @@ print stream.start()
 turn_amount = 10
 x = y = 0
 picture_positions = [('q1', -100, -30), 
-					 ('q2', 100, -30), 
-					 ('q3', 50, -30), 
-					 ('q4',  -50, -30), 
-					 ('q5', 0, 50)]
+					 ('q2', 100, -40), 
+					 ('q3', 40, -50), 
+					 ('q4',  -40, -50), 
+					 ('q5', 0, 20)]
 
 # helper functions for capture
 def snap(filename):
@@ -36,32 +36,27 @@ def snap(filename):
 	# put timestamp on image
 	d = ImageDraw.Draw(i)
 	timestamp = ' '.join(filename.split('_')[1:])[:-4]
-	d.text((10,40),timestamp,(255,255,255))
+	font = ImageFont.truetype("Caladea-Bold.ttf", 35)
+	d.text((10,10), timestamp, font=font, fill=(96,244,66))
 
 	i.save(filename)  # save it 
 
 	# send it to the server
+	if 'q5' in filename:  # this is a little hack because the server takes a while to return
+		lights('cam', 'off')
 	r = requests.post('http://192.168.1.190:5000/record/', files={'file':open(filename, 'rb')})
 	print 'pushed to server:', r.status_code
 	#os.popen('rm '+filename)
 
-def turn_updown(amt, sleep=1):
-	if amt<0:
-		cam.turn_down(-amt)
-	else:
-		cam.turn_up(amt)
-	time.sleep(sleep)
-
-def turn_leftright(amt, sleep=1):
-	if amt<0:
-		cam.turn_left(-amt)
-	else:
-		cam.turn_right(amt)
-	time.sleep(sleep)
-
 def move(leftright, updown):
-	turn_leftright(leftright, sleep=0)
-	turn_updown(updown, sleep=0)
+	if updown<0:
+		cam.turn_down(-updown)
+	else:
+		cam.turn_up(updown)
+	if leftright<0:
+		cam.turn_left(-leftright)
+	else:
+		cam.turn_right(leftright)
 	time.sleep(1)
 
 def reset():
@@ -84,6 +79,7 @@ def capture():
 		move(x, y)
 		snap('%s_%s'%(quad,timestamp))
 		reset()
+		time.sleep(0.1)
 
 	# turn grow lights on and cam lights off
 	hour = int(time.strftime('%H'))
