@@ -14,8 +14,8 @@ import requests
 
 TEMP_PIN = 0
 LIGHT_PIN = 2
-MOISTURE_PIN = 1
-SLEEP_LENGTH = 5*60  # 5 minutes?
+MOISTURE_PIN = 3
+SLEEP_LENGTH = 1#5*60  # 5 minutes?
 
 def get_temperature():
 	# there's math on top of the analog read so make it a function
@@ -39,7 +39,7 @@ def run():
 	sys.stdout.flush()
 
 	# write data to server
-	requests.get('http://192.168.1.190:5000/measure/'+line)
+	#requests.get('http://192.168.1.190:5000/measure/'+line)
 
 if __name__ == '__main__':
 	try:
