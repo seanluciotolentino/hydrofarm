@@ -39,7 +39,7 @@ def run():
 	sys.stdout.flush()
 
 	# write data to server
-	requests.get('http://192.168.1.190:5000/measure/'+line)
+	#requests.get('http://192.168.1.190:5000/measure/'+line)
 
 if __name__ == '__main__':
 	try:
